@@ -1,0 +1,8 @@
+*.dll
+*.obj
+*.pdb
+*.lib
+!link-lib/*.dll
+!link-lib/*.lib
+*.exp
+*.ilk

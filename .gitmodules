@@ -1,0 +1,3 @@
+[submodule "dep/asmjit"]
+	path = dep/asmjit
+	url = https://www.github.com/asmjit/asmjit
