@@ -1,20 +1,16 @@
-#ifndef PATCHCODE_H
-#define PATCHCODE_H
+#ifndef HOOKANY64_PATCHCODE_H
+#define HOOKANY64_PATCHCODE_H
 
 #include "shared.h"
 
 #include <cstdint>
-
-namespace asmjit
-{
-    class JitRuntime;
-}
+#include <asmjit/asmjit.h>
 
 //! Hot-patch code generated for a detour
 //!
 //! The hot-patch code consists of a simple jmp-instruction, which
 //! will re-route the code execution to a new destination.
-class ANY_HOOK PatchCode
+class HOOKANY64_EXPORT PatchCode
 {
 private:
     uint8_t* function_address;

@@ -1,16 +1,13 @@
-#pragma once
+#ifndef HOOKANY64_FNHOOK_H
+#define HOOKANY64_FNHOOK_H
 
 #include "shared.h"
-
-namespace asmjit
-{
-class JitRuntime;
-}
+#include <asmjit/asmjit.h>
 
 class PatchCode;
 class NotifyDetourAcceptor;
 
-class ANY_HOOK fn_hook
+class HOOKANY64_EXPORT fn_hook
 {
 private:
 	void* target_fn;
@@ -28,3 +25,4 @@ public:
 	void SetEnabled(bool value);
 };
 
+#endif

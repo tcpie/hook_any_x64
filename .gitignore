@@ -1,3 +1,6 @@
+build/
+Testing/
+.vscode/
 *.dll
 *.obj
 *.pdb

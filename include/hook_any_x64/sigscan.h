@@ -1,5 +1,5 @@
-#ifndef SIGSCAN_H
-#define SIGSCAN_H
+#ifndef HOOKANY64_SIGSCAN_H
+#define HOOKANY64_SIGSCAN_H
 
 #include <string>
 

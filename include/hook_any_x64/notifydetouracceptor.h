@@ -1,16 +1,12 @@
-#ifndef NOTIFYDETOURACCEPTOR_H
-#define NOTIFYDETOURACCEPTOR_H
+#ifndef HOOKANY64_NOTIFYDETOURACCEPTOR_H
+#define HOOKANY64_NOTIFYDETOURACCEPTOR_H
 
 #include "shared.h"
 
 #include <stdint.h>
+#include <asmjit/asmjit.h>
 
-namespace asmjit
-{
-    class JitRuntime;
-}
-
-class ANY_HOOK NotifyDetourAcceptor
+class HOOKANY64_EXPORT NotifyDetourAcceptor
 {
 private:
     void* code;

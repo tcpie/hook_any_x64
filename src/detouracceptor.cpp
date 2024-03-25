@@ -12,23 +12,22 @@ DetourAcceptor::DetourAcceptor(void* code)
     this->code = code;
 }
 
-DetourAcceptor* DetourAcceptor::Create(asmjit::JitRuntime* runtime, size_t num_args, asmjit::Type::Id* arg_types, asmjit::Type::Id ret_type, void* callback, void* userdata)
+DetourAcceptor* DetourAcceptor::Create(asmjit::JitRuntime* runtime, size_t num_args, asmjit::TypeId* arg_types, asmjit::TypeId ret_type, void* callback, void* userdata)
 {
     asmjit::CodeHolder code_;
     code_.init(runtime->environment());
 
     asmjit::x86::Compiler c(&code_);
 
-    asmjit::FuncSignatureBuilder sig;
+    asmjit::FuncSignatureBuilder sig(asmjit::CallConvId::kX64Windows);
 
-    sig.setCallConv(asmjit::CallConv::kIdX64Windows);
     sig.setRet(ret_type);
 
     for (size_t i = 0; i < num_args; i++) {
         sig.addArg(arg_types[i]);
     }
 
-    c.addFunc(sig);
+    asmjit::FuncNode* fn_node = c.addFunc(sig);
 
     // Create the args
     vector<asmjit::x86::Gp> args;
@@ -36,7 +35,8 @@ DetourAcceptor* DetourAcceptor::Create(asmjit::JitRuntime* runtime, size_t num_a
     for (size_t i = 0; i < num_args; i++) {
         // Add registers
         asmjit::x86::Gp temp = c.newGp(arg_types[i]);
-        c.setArg(i,temp);
+
+        fn_node->setArg(i,temp);
         args.push_back(temp);
     }
 
@@ -46,11 +46,12 @@ DetourAcceptor* DetourAcceptor::Create(asmjit::JitRuntime* runtime, size_t num_a
 
     // Also create the args for the callback
     // function
-    asmjit::FuncSignatureBuilder sig_callback;
-    sig_callback.setCallConv(asmjit::CallConv::kIdX64Windows);
+    asmjit::FuncSignatureBuilder sig_callback(asmjit::CallConvId::kX64Windows);
+
     sig_callback.setRet(ret_type);
 
-    sig_callback.addArg(asmjit::Type::Id::kIdU64);
+    sig_callback.addArg(asmjit::TypeId::kUInt64);
+
     for (size_t i = 0; i < num_args; i++) {
         sig_callback.addArg(arg_types[i]);
     }

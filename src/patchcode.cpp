@@ -1,8 +1,8 @@
 #include "patchcode.h"
 
 #include <string.h>
-#include "asmjit/asmjit.h"
-#include "asmjit/x86.h"
+#include <asmjit/asmjit.h>
+#include <asmjit/x86.h>
 #include <capstone/capstone.h>
 
 #include <iostream>

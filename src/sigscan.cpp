@@ -25,7 +25,7 @@ void init_sigscan()
     MODULEINFO modInfo = { NULL, };
     GetModuleInformation(currProcess, GetModuleHandleA("GTA5.exe"), &modInfo, sizeof(modInfo));
 
-    DWORD dummyDword = NULL;
+    DWORD dummyDword = 0;
 
     search_start = (uint64_t)modInfo.lpBaseOfDll;
     search_size = modInfo.SizeOfImage;

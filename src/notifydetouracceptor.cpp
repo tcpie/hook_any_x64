@@ -1,8 +1,8 @@
 #include "notifydetouracceptor.h"
 
-#include "asmjit/core.h"
-#include "asmjit/asmjit.h"
-#include "asmjit/x86.h"
+#include <asmjit/core.h>
+#include <asmjit/asmjit.h>
+#include <asmjit/x86.h>
 
 using namespace asmjit;
 using namespace asmjit::x86;
