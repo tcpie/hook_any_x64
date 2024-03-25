@@ -1,0 +1,11 @@
+{
+  "dependencies": [
+    "asmjit",
+    {
+      "name": "capstone",
+      "features": [
+        "x86"
+      ]
+    }
+  ]
+}
