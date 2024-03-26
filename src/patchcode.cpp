@@ -127,8 +127,11 @@ PatchCode* PatchCode::Create(asmjit::JitRuntime* runtime, void *function_address
     PatchCode::create_jmp(runtime, function_address, destination, &patch_code, &patch_size);
 
     // Now we see if we can find enough bytes at the start of the function
+    //  We do this *after* creating the patch code, as now we know the size of the jump code
     int n_bytes = PatchCode::count_num_start_bytes(function_address, patch_size);
 
+    // If we didn't find enough space, we end up in the next if statement.
+    //  todo: free patch code?
     if (n_bytes <= 0)
         return nullptr;
 
@@ -146,6 +149,7 @@ PatchCode* PatchCode::Create(asmjit::JitRuntime* runtime, void *function_address
                          &jmp_code,
                          &jmp_code_size);
 
+    // todo: check that indeed this jump fits in the space we allocated for it inside our unpatched_fn buffer
     memcpy((void*)((uint64_t)unpatched_fn + n_bytes), jmp_code, jmp_code_size);
 
     runtime->release(jmp_code);

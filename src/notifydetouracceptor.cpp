@@ -52,10 +52,15 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
     PUSH_MMREG(a, xmm1);    // Second arg if floating point
     PUSH_MMREG(a, xmm2);    // Third arg if floating point
     PUSH_MMREG(a, xmm3);    // Fourth arg if floating point
-                            // Additiona floating point args are on stack
+                            // Additional floating point args are on stack
 
     a.mov(rdx, rsp);    // Here we assign the second argument
-                        // for the callback function
+                        // for the callback function.
+                        //
+                        // We assign the value of RSP, in other words, it
+                        // is a pointer to the top of the stack. That is
+                        // essentially a struct containing the values of
+                        // XMM3...XMM0, R9, R8, RDX, RCX.
 
     a.sub(rsp, 40);// Reserve four stack locations for the callee
                    // See: https://docs.microsoft.com/en-us/cpp/build/stack-usage?view=msvc-160#stack-allocation
@@ -64,7 +69,7 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
                    // For some reason we need to add  8...
 
     a.mov(rcx, (uint64_t)userdata); // Userdata is the first argument
-    a.call((uint64_t)callback);               // Call the callback
+    a.call((uint64_t)callback);     // Call the callback
 
     a.add(rsp, 40);// Recover four stack locations
 
@@ -81,6 +86,9 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
     a.pop(r10); // Return address. Popping to fix stack.
     a.pop(rbp);
 
+    // And we jump to the unhooked function
+    // Note how any changes to the call arguments, done in the user callback,
+    // will be propagated to the target function.
     a.mov(asmjit::x86::r11,(uint64_t)unhooked_fn); // R11 register is volatile, so we can use it.
     a.jmp(asmjit::x86::r11);
 

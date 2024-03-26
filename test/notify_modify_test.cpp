@@ -11,21 +11,21 @@ int add_fn(int a, int b)
 
 struct hook_res
 {
-    int found_a;
-    int found_b;
+    int alter_a;
+    int alter_b;
 };
 
 void notified_function(hook_res* res, NotifyDetourAcceptor::call_state* state)
 {
-    res->found_a = (int)state->rcx;
-    res->found_b = (int)state->rdx;
+    state->rcx = (uint64_t)res->alter_a;
+    state->rdx = (uint64_t)res->alter_b;
 }
 
 int main()
 {
     hook_res res;
-    res.found_a = 0;
-    res.found_b = 0;
+    res.alter_a = 1330;
+    res.alter_b = 7;
 
     int test_a = 3;
     int test_b = 4;
@@ -40,7 +40,7 @@ int main()
 
     delete h;
 
-    if (res.found_a == test_a && res.found_b == test_b) {
+    if (result == res.alter_a + res.alter_b) {
         return 0;
     }
     

@@ -25,10 +25,15 @@ target_link_libraries(${CUR_PROJ_NAME} PRIVATE capstone::capstone)
 # Tests
 enable_testing()
 
-add_executable(notify_test test/notify_test.cpp)
+function(hook_any_x64_add_test testname)
+    add_executable(${testname} test/${testname}.cpp)
 
-target_include_directories(notify_test PRIVATE include)
-target_link_libraries(notify_test PRIVATE ${CUR_PROJ_NAME})
+    target_include_directories(${testname} PRIVATE include)
+    target_link_libraries(${testname} PRIVATE ${CUR_PROJ_NAME})
 
-add_test(NAME notify_test
-         COMMAND $<TARGET_FILE:notify_test>)
+    add_test(NAME ${testname}
+            COMMAND $<TARGET_FILE:${testname}>)
+endfunction()
+
+hook_any_x64_add_test(notify_test)
+hook_any_x64_add_test(notify_modify_test)
