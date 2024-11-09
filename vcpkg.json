@@ -1,4 +1,9 @@
 {
+  "name": "hook-any-x64",
+  "version": "0.1",
+  "homepage": "https://github.com/tcpie/hook_any_x64",
+  "description": "Hook x64 functions on Windows without knowing their prototype",
+  "license": "MIT",
   "dependencies": [
     "asmjit",
     {

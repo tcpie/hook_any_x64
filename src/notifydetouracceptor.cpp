@@ -37,11 +37,11 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
     // In the stack,
     // we are now at the return pointer.
     // Let's store this
-    a.mov(r10,rsp);
+    a.mov(r10,ptr(rsp)); 
 
     a.push(rbp);
     a.mov(rbp, rsp);
-
+    
     a.push(r10);    // Return address
     a.push(rcx);    // First argument
     a.push(rdx);    // Second argument
@@ -88,7 +88,10 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
 
     // And we jump to the unhooked function
     // Note how any changes to the call arguments, done in the user callback,
-    // will be propagated to the target function.
+    // will be propagated to the target function. See also test/notify_modify_test.cpp.
+    //
+    // todo: we can probably upgrade this in a smart way to also support changing the 
+    //       return value.
     a.mov(asmjit::x86::r11,(uint64_t)unhooked_fn); // R11 register is volatile, so we can use it.
     a.jmp(asmjit::x86::r11);
 
