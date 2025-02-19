@@ -62,6 +62,30 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
                         // essentially a struct containing the values of
                         // XMM3...XMM0, R9, R8, RDX, RCX.
 
+    // Store non-volatile registers
+    //   These are not used to store call args, but nevertheless these
+    //   are non-volatile.
+    //      See: https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170#callercallee-saved-registers
+    // Non volatile args:
+    //  RBX, RBP (already stored), RDI, RSI, R12, R13, R14, R15, XMM6-XMM15
+    a.push(rbx);
+    a.push(rdi);
+    a.push(rsi);
+    a.push(r12);
+    a.push(r13);
+    a.push(r14);
+    a.push(r15);
+    PUSH_MMREG(a, xmm6);
+    PUSH_MMREG(a, xmm7);
+    PUSH_MMREG(a, xmm8);
+    PUSH_MMREG(a, xmm9);
+    PUSH_MMREG(a, xmm10);
+    PUSH_MMREG(a, xmm11);
+    PUSH_MMREG(a, xmm12);
+    PUSH_MMREG(a, xmm13);
+    PUSH_MMREG(a, xmm14);
+    PUSH_MMREG(a, xmm15);
+
     a.sub(rsp, 40);// Reserve four stack locations for the callee
                    // See: https://docs.microsoft.com/en-us/cpp/build/stack-usage?view=msvc-160#stack-allocation
                    //
@@ -73,6 +97,27 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
 
     a.add(rsp, 40);// Recover four stack locations
 
+    // Recover saved registers
+    POP_MMREG(a, xmm15);
+    POP_MMREG(a, xmm14);
+    POP_MMREG(a, xmm13);
+    POP_MMREG(a, xmm12);
+    POP_MMREG(a, xmm11);
+    POP_MMREG(a, xmm10);
+    POP_MMREG(a, xmm9);
+    POP_MMREG(a, xmm8);
+    POP_MMREG(a, xmm7);
+    POP_MMREG(a, xmm6);
+
+    a.pop(r15);
+    a.pop(r14);
+    a.pop(r13);
+    a.pop(r12);
+    a.pop(rsi);
+    a.pop(rdi);
+    a.pop(rbx);
+
+    // Now recover registers used to store call args
     POP_MMREG(a, xmm3);
     POP_MMREG(a, xmm2);
     POP_MMREG(a, xmm1);
@@ -82,7 +127,6 @@ NotifyDetourAcceptor* NotifyDetourAcceptor::Create(asmjit::JitRuntime *runtime, 
     a.pop(r8);
     a.pop(rdx);
     a.pop(rcx);
-
     a.pop(r10); // Return address. Popping to fix stack.
     a.pop(rbp);
 
