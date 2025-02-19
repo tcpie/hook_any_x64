@@ -72,7 +72,7 @@ int PatchCode::count_num_start_bytes(void *function, size_t patch_size)
 
     uint8_t* code = (uint8_t*)function;
     uint64_t address = (uint64_t)code;
-    size_t size = patch_size + 4;
+    size_t size = patch_size * 4;
     size_t found_num_bytes = 0;
 
     while (cs_disasm_iter(handle, (const uint8_t**)&code, &size, &address, insn)) {
